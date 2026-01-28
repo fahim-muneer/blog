@@ -30,7 +30,10 @@ export default function BlogList() {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (e, id) => {
+    e.preventDefault(); // Prevent navigation when clicking delete
+    e.stopPropagation(); // Stop event bubbling
+    
     if (window.confirm("Are you sure you want to delete this blog post?")) {
       try {
         await deleteDoc(doc(db, "blogs", id));
@@ -70,11 +73,10 @@ export default function BlogList() {
 
   return (
     <div>
-      {/* Navigation Bar */}
       <nav className="navbar">
         <div className="container">
           <Link to="/" className="navbar-brand">
-            📝 My Blog
+            Fahim Blogs
           </Link>
           <div className="navbar-menu">
             {currentUser ? (
@@ -86,7 +88,7 @@ export default function BlogList() {
                   <span>{currentUser.email}</span>
                 </div>
                 <Link to="/add" className="btn btn-small">
-                  ✍️ New Post
+                  New Post
                 </Link>
                 <button onClick={handleLogout} className="btn btn-secondary btn-small">
                   Logout
@@ -106,7 +108,6 @@ export default function BlogList() {
         </div>
       </nav>
 
-      {/* Main Content */}
       <div className="container">
         <div className="page-header">
           <h1 className="page-title">Latest Blog Posts</h1>
@@ -128,7 +129,12 @@ export default function BlogList() {
         ) : (
           <div className="blog-grid">
             {blogs.map((blog) => (
-              <div key={blog.id} className="blog-card fade-in">
+              <Link 
+                key={blog.id} 
+                to={`/blog/${blog.id}`}
+                className="blog-card fade-in"
+                style={{ textDecoration: "none", color: "inherit", cursor: "pointer" }}
+              >
                 {blog.imageUrl && (
                   <img
                     src={blog.imageUrl}
@@ -166,19 +172,20 @@ export default function BlogList() {
                       to={`/edit/${blog.id}`}
                       className="btn btn-secondary btn-small"
                       style={{ flex: 1 }}
+                      onClick={(e) => e.stopPropagation()}
                     >
-                      ✏️ Edit
+                       Edit
                     </Link>
                     <button
-                      onClick={() => handleDelete(blog.id)}
+                      onClick={(e) => handleDelete(e, blog.id)}
                       className="btn btn-danger btn-small"
                       style={{ flex: 1 }}
                     >
-                      🗑️ Delete
+                      Delete
                     </button>
                   </div>
                 )}
-              </div>
+              </Link>
             ))}
           </div>
         )}

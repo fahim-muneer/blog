@@ -1,15 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import {
-  collection,
-  addDoc,
-  doc,
-  getDoc,
-  updateDoc,
-  serverTimestamp,
-} from "firebase/firestore";
+import {collection,addDoc,doc,getDoc,updateDoc,serverTimestamp,} from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import { useAuth } from "../context/AuthContext";
+
+
 
 export default function AddEditBlog() {
   const [title, setTitle] = useState("");
@@ -18,7 +13,6 @@ export default function AddEditBlog() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -41,7 +35,6 @@ export default function AddEditBlog() {
       if (blogDoc.exists()) {
         const blogData = blogDoc.data();
         
-        // Check if current user is the author
         if (blogData.authorEmail !== currentUser.email) {
           setError("You don't have permission to edit this blog");
           setTimeout(() => navigate("/"), 2000);
@@ -104,11 +97,10 @@ export default function AddEditBlog() {
 
   return (
     <div>
-      {/* Navigation Bar */}
       <nav className="navbar">
         <div className="container">
           <Link to="/" className="navbar-brand">
-            📝 My Blog
+            My Blog
           </Link>
           <div className="navbar-menu">
             <Link to="/" className="nav-link">
@@ -118,7 +110,6 @@ export default function AddEditBlog() {
         </div>
       </nav>
 
-      {/* Form */}
       <div className="container-small">
         <div className="form-container">
           <h1 className="form-title">
@@ -146,7 +137,7 @@ export default function AddEditBlog() {
               />
             </div>
 
-            <div className="form-group">
+            {/* <div className="form-group">
               <label htmlFor="imageUrl">Image URL (optional)</label>
               <input
                 id="imageUrl"
@@ -171,7 +162,7 @@ export default function AddEditBlog() {
                   }}
                 />
               )}
-            </div>
+            </div> */}
 
             <div className="form-group">
               <label htmlFor="content">Content *</label>
